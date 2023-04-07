@@ -1,41 +1,26 @@
-use std::clone::Clone;
-
-pub struct Array<T: Clone> {
-    data: Vec<T>,
+pub struct Array<T, const N: usize> {
+    data: [T; N],
 }
 
-impl<T: Clone> Array<T> {
-    pub fn new(size: usize, default: T) -> Self {
-        let data = vec![default; size];
-        Array { data }
+impl<T, const N: usize> Array<T, N> {
+    pub fn new(value: T) -> Self where T: Copy {
+        Array { data: [value; N] }
     }
 
     pub fn len(&self) -> usize {
-        self.data.len()
+        N
     }
 
     pub fn get(&self, index: usize) -> Option<&T> {
-        self.data.get(index)
-    }
-
-    pub fn push(&mut self, value: T) {
-        self.data.push(value);
-    }
-
-    pub fn pop(&mut self) -> Option<T> {
-        if self.data.is_empty() {
-            None
+        if index < N {
+            Some(&self.data[index])
         } else {
-            Some(self.data.remove(self.data.len() - 1))
+            None
         }
     }
 
-    pub fn is_empty(&self) -> bool {
-        self.data.is_empty()
-    }
-
     pub fn set(&mut self, index: usize, value: T) -> Option<()> {
-        if index < self.data.len() {
+        if index < N {
             self.data[index] = value;
             Some(())
         } else {
@@ -44,14 +29,13 @@ impl<T: Clone> Array<T> {
     }
 }
 
-
 #[cfg(test)]
 mod tests {
     use super::*;
 
     #[test]
     fn test_new_array() {
-        let arr: Array<i32> = Array::new(5, 0);
+        let arr: Array<i32, 5> = Array::new(0);
         assert_eq!(arr.len(), 5);
         for i in 0..5 {
             assert_eq!(arr.get(i), Some(&0));
@@ -59,33 +43,10 @@ mod tests {
     }
 
     #[test]
-    fn test_array_len() {
-        let arr: Array<i32> = Array::new(5, 0);
-        assert_eq!(arr.len(), 5);
-    }
-
-
-    #[test]
     fn test_get_and_set() {
-        let mut arr: Array<i32> = Array::new(3, 0);
+        let mut arr: Array<i32, 3> = Array::new(0);
         assert_eq!(arr.get(0), Some(&0));
         assert_eq!(arr.set(0, 1), Some(()));
         assert_eq!(arr.get(0), Some(&1));
-    }
-
-
-    #[test]
-    fn test_push_and_pop() {
-        let mut arr: Array<i32> = Array::new(1, 1);
-        arr.push(1);
-        arr.push(2);
-        arr.push(3);
-        assert_eq!(arr.pop(), Some(3));
-        assert_eq!(arr.pop(), Some(2));
-        assert_eq!(arr.pop(), Some(1));
-        arr.push(4);
-        arr.push(5);
-        assert_eq!(arr.pop(), Some(5));
-        assert_eq!(arr.pop(), Some(4));
     }
 }
