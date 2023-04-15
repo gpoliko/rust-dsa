@@ -1,4 +1,4 @@
 # Rust DSA 
-## Data Structures and Algorithms in Rust
+## Data Structures, Algorithms and Design Patterns in Rust
 
 Just trying to get better at Rust.
