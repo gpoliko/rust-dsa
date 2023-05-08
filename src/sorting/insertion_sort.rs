@@ -8,6 +8,7 @@ pub fn insertion_sort<T: Ord>(arr: &mut [T]) {
     }
 }
 
+#[cfg(test)]
 mod tests {
     use super::*;
 
